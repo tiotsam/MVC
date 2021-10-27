@@ -1,0 +1,32 @@
+<?php if( isset($_SESSION['user']) && $_SESSION['user']->role == 1){ ?> 
+    <h1>Modifier Catégorie</h1>
+    <div class="hide"></div>
+    <form method="POST" action="<?php echo WEB_ROOT?>/updatecategorie" class="form-horizontal">
+        <div class="form-group">
+            <label for="categorie">Catégorie</label>
+            <input type="text" class="form-control" id="categorie" name="categorie" value="<?php echo $this->categs->nom ?>">
+            <input type="hidden" id="id" name="id" value="<?php echo $this->categs->id ?>">
+        </div>
+        <button type="button" id="ajax" class="btn btn-primary">Envoyer</button>
+    </form>
+
+    <script type="text/javascript">
+        $('#ajax').click(function(){
+            var cat = $('#categorie').val();
+            var id = $('#id').val();
+            $.ajax({
+                method: "GET",
+                url: "/updatecategorie?categorie="+cat+'&id='+id,
+            })
+                .done(function( msg ){
+                    if (msg == 1){
+                        $('.hide').attr('class', 'alert alert-success');
+                        $('.alert-success').html('Changement effectué');
+                    }else{
+                        $('.hide').attr('class', 'alert alert-success');
+                        $('.alert-warning').html('Problème détecté');
+                    }
+                });
+        });
+    </script>
+<?php } else header('Location:'.WEB_ROOT.'/films');?>

@@ -1,0 +1,30 @@
+<?php if( isset($_SESSION['user']) && $_SESSION['user']->role == 1){ ?> 
+    <h2>Liste des Catégories</h2>
+
+    <?php
+        echo '<ul class="list-group">';
+        foreach($this->categs as $value) {
+            echo'<li class="list-group-item"><a href="/update/categorie?id='.$value->id.'">'.$value->id.' '.$value->nom.'</a>';
+            echo '<a onclick="return confirm(\'êtes-vous sûr de vouloir supprimmer cette catégorie ? \')" href="?iddelete='.$value->id.'" class="float-right"><i class="fas fa-trash"></i></a>';
+            echo '</li>';
+        }
+        echo'</ul>';
+
+    ?>
+
+    <!-- <table>
+            <tr>
+                <td>ID</td>
+                <td>Nom</td>
+                <td>Slug</td>
+            </tr>
+            <?php foreach($this->categs as $value) {?>
+                <tr>
+                    <td><?php echo $value->id; ?></td>
+                    <td><?php echo $value->nom; ?></td>
+                    <td><?php echo $value->slug; ?></td>
+                </tr>
+            <?php } ?>
+
+    </table> -->
+<?php } else header('Location:'.WEB_ROOT.'/films');?>

@@ -44,6 +44,21 @@ class Model
 	{
 		$this->_table = $table;
 	}
+
+    public function fetchAll($order = null){
+
+		if($order == null)
+			$sql = 'select * from ' . $this->_table;
+        else	
+			$sql = 'select * from ' . $this->_table.' order by '.$order;
+
+		
+		
+		$statement = $this->_dbh->prepare($sql);
+		$statement->execute(array());
+		
+		return $statement->fetchAll(PDO::FETCH_OBJ);
+    }
 	
 	public function fetchOne($id)
 	{

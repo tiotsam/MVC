@@ -1,0 +1,102 @@
+<h1>Inscription</h1> 
+<form method="POST" enctype="multipart/form-data" action="<?php echo WEB_ROOT?>/user/register" class="form-horizontal">
+    <input type="hidden" name="MAX_FILE_SIZE" value="2000000">
+    <input type="hidden" name='id' value="<?php if($this->userUpdate != null) echo $this->userUpdate->id; ?>">
+    <div>
+        <label for="image">Avatar :</label><br>
+        <img style="width:144px; height:240px;" src="<?php if($this->userUpdate != null){
+                                                                echo '/'.$this->userUpdate->image;
+                                                            }elseif ($this->errImg != null) {
+                                                                echo '/'.$this->errImg;
+                                                            } ?>" alt="Pas d'image">
+        <input type="file" id="image" name="image">
+        <input type="hidden" id="imageUpdate" name="imageUpdate" value="<?php if($this->userUpdate != null){
+                                                                                    echo $this->userUpdate->image;
+                                                                                }elseif ($this->errImg != null) {
+                                                                                    echo $this->errImg;
+                                                                                }?>">
+    </div>
+    <div class="form-group">
+        <label for="nom">Nom :</label>
+        <input type="text" required class="form-control" id="nom" name="nom" value="<?php if($this->userUpdate != null){
+                                                                                                echo $this->userUpdate->nom;
+                                                                                            }elseif ($this->errNom != null) {
+                                                                                                echo $this->errNom;
+                                                                                            }  ?>">
+    </div>
+    <div class="form-group">
+        <label for="prenom">Prénom :</label>
+        <input type="text" required class="form-control" id="prenom" name="prenom" value="<?php if($this->userUpdate != null){
+                                                                                                echo $this->userUpdate->prenom;
+                                                                                            }elseif ($this->errPrenom != null) {
+                                                                                                echo $this->errPrenom;
+                                                                                            } ?>">
+    </div>
+    <div class="form-group">
+        <label for="pseudo">Pseudo :</label>
+        <input type="text" required class="form-control" id="pseudo" name="pseudo" value="<?php if($this->userUpdate != null){
+                                                                                                echo $this->userUpdate->pseudo;
+                                                                                            }elseif ($this->errPseudo != null) {
+                                                                                                echo $this->errPseudo;
+                                                                                            } ?>">
+    </div>
+    <?php if(!isset($_SESSION['user'])){ ?>
+        <div class="form-group">
+            <label for="pass">Mot de passe :</label>
+            <input type="text" required class="form-control" id="pass" name="pass" value="<?php if($this->userUpdate != null){
+                                                                                                    echo $this->userUpdate->pass;
+                                                                                                }elseif ($this->errPass != null) {
+                                                                                                    echo $this->errPass;
+                                                                                                } ?>">
+        </div>
+        <div class="form-group">
+            <label for="pass">Confirmer le mot de passe :</label>
+            <input type="text" required class="form-control" id="confpass" name="confpass" value="<?php if($this->errConfpass != null){
+                                                                                                    echo $this->errConfpass;
+                                                                                                }?>">
+        </div>
+    <?php } else{ ?>
+        <div class="form-group">
+            <label for="pass"> Modifier Mot de passe :</label>
+            <input type="text" class="form-control" id="passUpdate" name="passUpdate" value="<?php if($this->errPass != null){
+                                                                                                    echo $this->errPass;
+                                                                                                }
+                                                                                             ?>">
+        </div>
+        <div class="form-group">
+            <label for="pass">Confirmer le mot de passe :</label>
+            <input type="text" class="form-control" id="confpassUpdate" name="confpassUpdate" value="<?php if($this->errConfpass != null){ 
+                                                                                                        echo $this->errConfpass;
+                                                                                                    } ?>">                                                                                                
+        </div>
+    <?php } ?>
+    <div class="form-group">
+        <label for="adrsFacturation">Adresse de Facturation :</label>
+        <input type="text" required class="form-control" id="adrsFacturation" name="adrsFacturation" value="<?php if($this->userUpdate != null){
+                                                                                                                        echo $this->userUpdate->adrsFacturation;
+                                                                                                                    }elseif ($this->errAdrs != null) {
+                                                                                                                        echo $this->errAdrs;
+                                                                                                                    } ?>">
+    </div>
+    <div class="form-group">
+        <label for="adrsLivraison">Adresse de livraison :</label>
+        <input type="text" required class="form-control" id="adrsLivraison" name="adrsLivraison" value="<?php if($this->userUpdate != null){
+                                                                                                                    echo $this->userUpdate->adrsLivraison;
+                                                                                                                }elseif ($this->errAdrs2 != null) {
+                                                                                                                    echo $this->errAdrs2;
+                                                                                                                } ?>">
+    </div>
+    <div class="form-group">
+        <label for="mail">Adresse mail :</label>
+        <input type="text" required class="form-control" id="mail" name="mail" value="<?php if($this->userUpdate != null){
+                                                                                                echo $this->userUpdate->mail;
+                                                                                            }elseif ($this->errMail != null) {
+                                                                                                echo $this->errMail;
+                                                                                            } ?>">
+    </div>
+    <?php if(!isset($_SESSION['user'])){?>
+        <button type="submit" id="" class="btn btn-primary">S'inscrire</button>
+    <?php } else { ?>
+        <button type="submit" id="" class="btn btn-primary">Modifier</button>
+    <?php } ?>
+</form>

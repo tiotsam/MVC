@@ -1,0 +1,74 @@
+<div hidden id="Message" class="Message alert alert-success"></div>
+<div class="container">
+
+    <div class="row marketing jumbotron">
+        <div class="col-lg-8">
+            <h1 id="titre" class="display-3"><?php echo $this->filmDetail->titre; ?></h1>
+
+            <p><h5>Date de sortie : </h5> <?php echo $this->filmDetail->date_sortie; ?></p>
+
+            <p>
+                <h5>Catégories : </h5> <?php foreach($this->filmCategs as $categ){?>
+                                                <?php echo $categ->nom.' /'; ?>
+                                                <?php } ?> 
+            </p>
+            <h5>Description</h5>
+            <p>
+                <?php echo $this->filmDetail->description; ?>
+            </p>
+            <h5>Réalisateur</h5>
+            <p>
+                <?php echo $this->filmDetail->realisateur; ?>
+            </p>
+            <h5>Prix</h5>
+            <p>
+                <?php echo $this->filmDetail->prix; ?> €
+            </p>
+            <input type="hidden" id="idFilm" value="<?php echo $this->filmDetail->id; ?>">
+            
+            <p>
+                <?php if(isset($_SESSION['user'])){ ?>
+                    <button class="panier btn btn-primary btn-sm" role="button">
+                        <i class="fas fa-cart-plus"></i> <strong>Ajouter au panier</strong>
+                    </button>
+                <?php } ?>
+                <a href="/films" class="btn btn-primary">Back</a>
+            </p>
+        </div>
+        <script>
+            $('.panier').click(()=>{
+
+                filmID = document.getElementById('idFilm').value;
+                titre = document.getElementById('titre').innerText;
+                console.log(filmID);
+
+                nbrAchat = document.getElementById('qttPanier').innerText;
+                nbrAchat = parseInt(nbrAchat) + 1;
+
+                document.getElementById('nbrAchats').className = "active nav-link float-left menu-panier";
+
+                $.ajax({
+                    method: "POST",
+                    url: "/addpanier",
+                    data: { idFilm : filmID }
+                })
+                .done((msg)=>{
+                    $('.filmList').html('');
+                    $('.filmList').html(msg);
+
+                    document.getElementById('Message').removeAttribute("hidden");
+                    $('.message').html(titre + ' ajouté au panier.');
+                    
+                    if(nbrAchat == 1){
+                        document.getElementById('qttPanier').removeAttribute("hidden");
+                    }                    
+                    $('.qttpanier').html(nbrAchat);
+
+                });
+            });
+        </script>
+        <div class="col-lg-3">
+            <img style="width:288px; height:480px;" src="/<?php echo $this->filmDetail->image; ?>">
+        </div>
+    </div>
+</div>

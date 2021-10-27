@@ -1,0 +1,10 @@
+<?php if( isset($_SESSION['user']) && $_SESSION['user']->role == 1){ ?>     
+    <h1>Ajouter une catégorie</h1> 
+    <form method="POST" action="<?php echo WEB_ROOT?>/add/categorie" class="form-horizontal">
+        <div class="form-group">
+            <label for="categorie">Catégorie</label>
+            <input type="text" class="form-control" id="categorie" name="categorie">
+        </div>
+        <button type="submit" id="" class="btn btn-primary">Envoyer</button>
+    </form>
+<?php } else header('Location:'.WEB_ROOT.'/films');?>

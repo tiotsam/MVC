@@ -1,0 +1,80 @@
+<h1>Liste des films</h1>
+
+<form method="GET">
+    <div class="input-group">
+        <input class="form-control" type="search" name="search" id="search" placeholder="Recherche">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+    </div>
+</form>
+
+<!-- Liste de catégorie -->
+
+<form method="POST">
+    <div class="categContainer" style="display:flex; flex-direction:row; justify-content:space-evenly;">
+        <?php foreach($this->allCategs as $categ){ ?>
+            <div>
+                <input type="checkbox" id="<?php echo $categ->id ?>" name="categ[]" value="<?php echo $categ->id ?>">
+                <label for="<?php echo $categ->id ?>"><?php echo $categ->nom ?></label>
+            </div>
+        <?php } ?>
+    </div>
+</form>
+
+<!-- Script ajax -->
+
+<script>
+    $('input[type="checkbox"]').click(()=>{ 
+        checkedArray = [];
+        $('input[type="checkbox"]:checked').each(function(){
+            checkedArray.push($(this).val());
+        });
+        $.ajax({
+            method: "POST",
+            url: "/films/searchajaxparcategorie",
+            data: {categTri: checkedArray}
+        })
+        .done((msg)=>{
+            $('.filmList').html('');
+            $('.filmList').html(msg);
+        });
+    });
+</script>
+
+<!-- Affichage de la liste des films  -->
+
+<table class="table table-striped filmList" width="647">
+    <tr>
+        <th>Titre : </th>
+        <th>Image :</th>
+        <th>Date de Sortie :</th>
+        <th>Réalisateur :</th>
+        <th>Catégorie :</th>
+        <th>Prix :</th>
+    <?php if( isset($_SESSION['user']) && $_SESSION['user']->role == 1){ ?>
+        <th>Delete :</th>
+        <th>Edit :</th>
+    <?php } ?>
+    </tr>
+    <?php foreach($this->films as $value){?>
+        <tr>
+            <td><a href="/films/detail?idread=<?php echo $value->id ?>"><?php echo $value->titre ?></a></td>
+            <td><img style="width:144px; height:240px;" src="<?php echo $value->image ?>"></td>
+            <td><?php echo $value->date_sortie ?></td>
+            <td><?php echo $value->realisateur ?></td>
+            <td>
+                <?php foreach($this->categs[$value->id] as $categ){?>
+                    <?php echo $categ->nom.' /'; ?>
+                <?php } ?> 
+            </td>
+            <td><?php echo $value->prix ?> €</td>
+            <?php if( isset($_SESSION['user']) && $_SESSION['user']->role == 1){ ?>
+                <td>
+                    <a onclick="return confirm('êtes-vous sûr de vouloir supprimmer ce film ?')" href="?iddelete=<?php echo $value->id ?>" class="float-right"><i class="fas fa-trash"></i></a>
+                </td>
+                <td>
+                    <a href='/add/film?id=<?php echo $value->id ?>' title='Update Record' data-toggle='tooltip'>editer</span></a>
+                </td>
+            <?php } ?>
+        </tr>
+    <?php } ?>
+</table>

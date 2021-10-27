@@ -1,0 +1,50 @@
+<?php if( isset($_SESSION['user']) && $_SESSION['user']->role == 1){ ?>
+    <h1>Ajouter un film</h1> 
+    <form method="POST" enctype="multipart/form-data" action="<?php echo WEB_ROOT?>/add/film" class="form-horizontal">
+        <input type="hidden" name="MAX_FILE_SIZE" value="2000000">
+        <input type="hidden" name='id' value="<?php if($this->filmUpdate != null) echo $this->filmUpdate->id; ?>">
+        <div class="form-group">
+            <label for="titre">Titre :</label>
+            <input type="text" class="form-control" id="titre" name="titre" value="<?php if($this->filmUpdate != null) echo $this->filmUpdate->titre; ?>">
+        </div>
+        <div class="form-group">
+            <label for="titre">Date de Sortie :</label>
+            <input type="date" class="form-control" id="dateSortie" name="dateSortie" value="<?php if($this->filmUpdate != null) echo $this->filmUpdate->date_sortie; ?>">
+        </div>
+        <div class="form-group">
+            <label for="titre">Description :</label>
+            <textarea type="text" class="form-control" id="description" name="description"><?php if($this->filmUpdate != null) echo $this->filmUpdate->description; ?></textarea>
+        </div>
+        <div class="form-group">
+            <label for="titre">Prix :</label>
+            <input type="text" class="form-control" id="prix" name="prix" value="<?php if($this->filmUpdate != null) echo $this->filmUpdate->prix; ?>">
+        </div>
+        <div>
+            <label for="titre">Image :</label><br>
+            <img style="width:144px; height:240px;" src="<?php if($this->filmUpdate != null) echo '/'.$this->filmUpdate->image; ?>" alt="Pas d'image">
+            <input type="file" id="image" name="image">
+            <input type="hidden" id="imageUpdate" name="imageUpdate" value="<?php if($this->filmUpdate != null) echo $this->filmUpdate->image; ?>">
+        </div>
+        <div class="form-group">
+            <label for="titre">Réalisateur :</label>
+            <input type="text" class="form-control" id="realisateur" name="realisateur" value="<?php if($this->filmUpdate != null) echo $this->filmUpdate->realisateur; ?>">
+        </div>
+        <div class="form-group">
+            <label for="categ">Catégories :</label>        
+            
+            <?php foreach($this->categs as $value){ ?>
+                <div>
+                    <input type="checkbox" id="<?php echo $value->id ?>" name="categ[]" value="<?php echo $value->id ?>" <?php 
+                    if($this->categUpdate != null){
+                        foreach ( $this->categUpdate[$this->filmUpdate->id] as $val ) {
+                            if($val->id == $value->id)
+                                echo "checked";
+                        } } ?>>
+                    <label for="<?php echo $value->id ?>"><?php echo $value->nom ?></label>
+                </div>
+            <?php } ?>
+
+        </div>
+        <button type="submit" id="" class="btn btn-primary">Envoyer</button>
+    </form>
+<?php } else header('Location:'.WEB_ROOT.'/films');?>

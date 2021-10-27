@@ -1,0 +1,58 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Vente de DVD</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Accueil <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/films">Films<span class="sr-only">(current)</span></a>
+            </li>
+            <?php if( isset($_SESSION['user']) && $_SESSION['user']->role == 1 ){ ?>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/categories">Catégories</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Admin
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/add/categorie">Ajouter une catégorie</a>
+                        <a class="dropdown-item" href="/add/film">Ajouter un film</a>
+
+                    </div>
+                </li>
+            <?php }?>
+            <?php if( isset($_SESSION['user'])){ ?>
+                <li class="nav-item"><a id="nbrAchats" class="<?php if(count($_SESSION['user']->basket)>0) echo 'active'; ?> nav-link float-left menu-panier" href="<?php echo WEB_ROOT; ?>/panier">Panier</a> </li>
+                <span <?php if(count($_SESSION['user']->basket) == 0) echo 'hidden'; ?> class="qttpanier" id="qttPanier"><?php
+                                                        $nbrAchat = 0;
+                                                        if( count($_SESSION['user']->basket)>0){
+
+                                                            foreach($_SESSION['user']->basket as $value){
+                                                                $nbrAchat += $value->quantity;
+                                                            }
+                                                            
+                                                        }
+                                                        echo $nbrAchat;
+                                                        
+                                                        ?></span>
+            <?php }?>
+        </ul>
+        <?php if(!isset($_SESSION['user'])){ ?>
+            <a class="mr-sm-2" href="<?php echo '/user/register'; ?>">Inscription</a>
+            <a class="mr-sm-2" href="<?php echo WEB_ROOT; ?>/user/login">Connexion</a>
+        <?php }else{
+        ?>
+            <a class="mr-sm-2" href="<?php echo WEB_ROOT; ?>/user/register?id=<?php echo $_SESSION['user']->id; ?>">Mon Compte</a>
+            <a class="mr-sm-2" href="<?php echo WEB_ROOT; ?>/user/logout">Déconnexion</a>
+        <?php }?>
+
+    </div>
+</nav>

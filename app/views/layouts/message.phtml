@@ -1,0 +1,23 @@
+<?php 
+    // echo '<pre>';print_r($_SESSION);echo'</pre>';
+
+    if(isset($_SESSION['message']['succes']) && count($_SESSION['message']['succes'])>0){
+        foreach($_SESSION['message']['succes'] as $mess){
+            ?>
+            <div class="alert alert-success"><strong>Félicitations !</strong>
+                <?php echo $mess; ?>
+            </div>
+            <?php
+        }
+    }
+    if(isset($_SESSION['message']['fail']) && count($_SESSION['message']['fail'])>0){
+        foreach($_SESSION['message']['fail'] as $mess){
+            ?>
+            <div class="alert alert-danger"><strong>Erreur !</strong>
+                <?php echo $mess; ?>
+            </div>
+            <?php
+        }
+    }
+    unset($_SESSION['message']); 
+?>

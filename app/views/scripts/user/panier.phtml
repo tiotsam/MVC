@@ -1,0 +1,134 @@
+<?php if( isset($_SESSION['user'])){ ?> 
+<h1>Panier</h1>
+
+<!-- Affichage de la liste des films  -->
+<div hidden id="Message" class="Message alert alert-success"></div>
+
+<table class="table table-striped filmList" width="647">
+
+    <tr>
+        <th>Titre : </th>
+        <th>Image :</th>
+        <th>Description :</th>
+        <th>Prix :</th>
+        <th>Quantité :</th>
+        <th>Total :</th>
+    </tr>
+
+    <?php foreach($_SESSION['user']->basket as $value){?>
+        <tr id="panier_<?php echo $value->id; ?>" class="idFilm-<?php echo $value->id; ?>">
+            <td><p id="titre_<?php echo $value->id;?>"><?php echo $value->titre ?></p></td>
+            <td><img style="width:144px; height:240px;" src="<?php echo $value->image ?>"></td>
+            <td><?php echo $value->description ?></td>
+            <td> <p id="prixUnit_<?php echo $value->id; ?>"> <?php echo $value->prix ?> € </p></td>
+            <td style=" display : flex; justify-content: space-evenly; align-items: center;">
+                <button title="<?php echo $value->id; ?>" class="btn btn-outline-success plus " >+</button>
+                <p class="quantity_<?php echo $value->id; ?>" style="width: 50px; text-align: center;">    <?php echo $value->quantity ?></p>
+                <button title="<?php echo $value->id; ?>" class="btn btn-outline-success minus" >-</button>
+            </td>
+            <td><p class="ssTotal_<?php echo $value->id; ?>"><?php echo $value->prix * $value->quantity ?> € </p></td>
+        </tr>
+    <?php } ?>
+
+    <tr>
+        <td><p>Total :</p>
+            <p id="total" class="total">
+            <?php
+                    $total = 0; 
+                    foreach($_SESSION['user']->basket as $value){  
+                        $total += $value->prix * $value->quantity;
+                    }
+                    echo $total ;
+                    ?> €
+            </p>       
+        </td>
+        <td><button class="btn btn-primary">Valider Commande</button></td>
+    </tr>
+</table>
+
+<script>
+    $('.plus').click(function (){
+
+        filmID = $(this).attr('title');
+        var quantite = parseInt($('.quantity_'+filmID).html(),10);
+        var prixUnit = document.getElementById('prixUnit_'+filmID).innerText;
+        prixUnit = prixUnit.substr(0, prixUnit.length - 1);
+        prixUnit = parseInt(prixUnit);
+        let titre = document.getElementById('titre_'+filmID).innerText;
+
+        var prixTotal = document.getElementById('total').innerText;
+        prixTotal = prixTotal.substr(0, prixTotal.length - 1);    
+        prixTotal = parseInt(prixTotal);
+        
+        nbrAchat = document.getElementById('qttPanier').innerText;
+        nbrAchat = parseInt(nbrAchat) + 1 ;
+
+        $.ajax({
+            method: "POST",
+            url: "/addpanier",
+            data: { idFilm : filmID }
+        })
+        .done(function(msg){
+
+
+            $('.quantity_'+filmID).html(quantite + 1);
+            $('.ssTotal_'+filmID).html((quantite + 1) * prixUnit+ ' €');
+            $('.total').html(prixTotal + prixUnit+ ' €');
+
+            // Message d'information
+            document.getElementById('Message').removeAttribute("hidden");
+            $('.message').html(titre+' ajouté au panier.');
+
+            $('.qttpanier').html(nbrAchat);
+            
+        });
+    });
+
+    $('.minus').click(function (){
+
+        filmID = $(this).attr('title');
+
+        var quantite = parseInt($('.quantity_'+filmID).html(),10);
+        var prixUnit = document.getElementById('prixUnit_'+filmID).innerText;
+        prixUnit = prixUnit.substr(0, prixUnit.length - 1);
+        prixUnit = parseInt(prixUnit);
+        let titre = document.getElementById('titre_'+filmID).innerText;
+
+        var prixTotal = document.getElementById('total').innerText;
+        prixTotal = prixTotal.substr(0, prixTotal.length - 1);
+        prixTotal = parseInt(prixTotal);
+
+        nbrAchat = document.getElementById('qttPanier').innerText;
+        nbrAchat = parseInt(nbrAchat) - 1 ;
+
+        $.ajax({
+            method: "POST",
+            url: "/minpanier",
+            data: { idFilm : filmID }
+        })
+        .done((msg)=>{
+            
+            $('.quantity_'+filmID).html(quantite - 1);
+            $('.ssTotal_'+filmID).html((quantite - 1) * prixUnit+ ' €');
+            $('.total').html(prixTotal - prixUnit+ ' €');
+            if(quantite - 1 == 0){
+                // $('.filmList').remove(document.getElementById('panier_'+filmID));
+                $(this).parents(".filmList tr").remove();
+            }
+
+            // Message d'information
+            document.getElementById('Message').removeAttribute("hidden");
+            $('.message').html(titre+' supprimé du panier.');
+
+            if(nbrAchat == 0){
+                $('.qttpanier').html('');
+                document.getElementById('nbrAchats').className = "nav-link float-left menu-panier";
+                // console.log(document.getElementById('nbrAchats').className);
+            }else{                
+                $('.qttpanier').html(nbrAchat); 
+            }                       
+        });
+    });
+</script>
+
+<?php } else header('Location:'.WEB_ROOT.'/films');?>
